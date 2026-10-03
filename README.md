@@ -182,3 +182,11 @@ Nếu các bạn là giảng viên hoặc reviewer:
 - `Rubric.md`: tiêu chí chấm điểm và bonus
 
 Track này được thiết kế để các bạn không chỉ “dùng agent”, mà còn bắt đầu nghĩ như một người thiết kế **memory system** cho agent production.
+
+## Phân tích kết quả mong đợi
+
+- **Recall:** Baseline chỉ mang ngữ cảnh của một thread nên phải quên ở session mới. Advanced lưu fact ổn định trong `User.md`, vì vậy có thể nhắc lại tên, nơi ở, nghề nghiệp và preference ở thread mới.
+- **Token:** Ở hội thoại ngắn, Advanced có thêm chi phí đọc profile và summary. Ở hội thoại dài, compact memory giữ summary cùng các message gần nhất thay vì kéo toàn bộ lịch sử vào prompt, nên giảm đáng kể `Prompt tokens processed`.
+- **Rủi ro memory:** `User.md` vẫn có thể tăng kích thước hoặc chứa fact sai. Bài làm dùng upsert theo field để correction mới thay thế fact cũ (ví dụ backend sang MLOps, Huế sang Đà Nẵng), và bỏ qua câu đùa/câu hỏi nhằm giảm nhiễu; production vẫn nên bổ sung confidence threshold hoặc memory decay.
+
+Phần nâng cao đã có trong implementation là **structured fact upsert và conflict handling**: profile chỉ giữ một giá trị hiện hành cho mỗi field, thay vì nối vô hạn các fact mâu thuẫn.
